@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import Logo from '../../olx-logo.png';
 import './Signup.css';
 import { collection, addDoc } from "firebase/firestore";
-import firebaseContext from '../../usecontext/usecontexthelper';
-import {  createUserWithEmailAndPassword  } from 'firebase/auth';
+import { firebaseContext } from '../../usecontext/usecontexthelper';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 
 export default function Signup() {
@@ -15,28 +15,28 @@ export default function Signup() {
   const [uemail, setuemail] = useState('')
   const [uphone, setuphone] = useState('')
   const [password, setpassword] = useState('')
-
-  const [firebaseConfig, auth] = useContext(firebaseContext);
+  const [displayName, setDisplayname] = useState('')
+  const [firebaseConfig, auth, storage, db] = useContext(firebaseContext);
 
   const Signup = async (e) => {
     e.preventDefault()
-    console.log(firebaseConfig);
+    //console.log(firebaseConfig);
     await createUserWithEmailAndPassword(auth, uemail, password)
       .then((userCredential) => {
-        // Signed in
-        addDoc(collection(firebaseConfig, "users"), {
-          name: fname,
-          email: uemail,
-          phone: uphone,
-          id: userCredential.user.uid
+        addDoc(collection(db, "users"), {
+          fname: fname,
+          uemail: uemail,
+          uphone: uphone,
+          userId: userCredential.user.uid,
         });
-        navigate("/login")
-        // ...
       })
-  }
+        // Signed in
 
+        navigate("/")
+        // ...
+      }
 
-
+  
   return (
     <div>
       <div className="signupParentDiv">
@@ -93,7 +93,7 @@ export default function Signup() {
           <br />
           <button onClick={Signup}>Signup</button>
         </form>
-        <a href='#'>Login</a>
+        <p onClick={()=>navigate("/login")}>Login</p>
       </div>
     </div>
   );

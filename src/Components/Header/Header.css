@@ -112,6 +112,10 @@
   height: 2px;
 }
 
+.loginPage:hover {
+  cursor:pointer;
+}
+
 .loginPage a{
   text-decoration: none;
 }
